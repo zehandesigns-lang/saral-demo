@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Weekly commission</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" />
+<style>
+  :root{
+    --bg:#f6f4ef; --panel:#ffffff; --panel-2:#faf8f3; --panel-3:#f1eee7;
+    --fg:#1f2430; --fg-muted:#6f6a62; --border:#e6e1d8;
+    --accent:#2f4bd6; --accent-2:#148a7c; --good:#2e9e5b; --warn:#c08a1e; --bad:#c6482f;
+    --font-display:"Fraunces",Georgia,serif; --font-sans:"IBM Plex Sans",system-ui,sans-serif; --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22; --panel-3:#23272f; --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
+    --accent:#7389ff; --accent-2:#3dc6b4; --good:#49bd74; --warn:#e0b150; --bad:#e2654a; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22; --panel-3:#23272f; --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
+    --accent:#7389ff; --accent-2:#3dc6b4; --good:#49bd74; --warn:#e0b150; --bad:#e2654a; color-scheme:dark;
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding-block:28px;padding-left:20px;padding-right:20px}
+  .tnum{font-variant-numeric:tabular-nums} [hidden]{display:none!important}
+  a.back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;margin-bottom:14px}
+  a.back:hover{text-decoration:underline}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2);font-weight:600;margin-bottom:6px}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(26px,5vw,38px);margin:0;line-height:1.05}
+  .sub{color:var(--fg-muted);font-size:13.5px;margin-top:6px}
+  .altlink{font-size:12.5px;margin-top:10px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+  .altlink a{color:var(--accent);text-decoration:none;font-weight:600}
+  .altlink a:hover{text-decoration:underline}
+
+  .list{display:flex;flex-direction:column;gap:8px;margin-top:18px}
+  .wk{border:1px solid var(--border);border-radius:12px;background:var(--panel);overflow:hidden}
+  .wkhead{display:grid;grid-template-columns:18px 1fr auto;gap:12px;align-items:center;padding:14px 16px;cursor:pointer}
+  .wkhead:hover{background:var(--panel-2)}
+  .chev{color:var(--fg-muted);transition:transform .18s;font-size:12px}
+  .wk.open > .wkhead .chev{transform:rotate(90deg)}
+  .wklabel{font-weight:600;font-size:15px}
+  .wkmeta{font-size:12px;color:var(--fg-muted);margin-top:2px;font-family:var(--font-mono)}
+  .wktot{text-align:right;font-family:var(--font-mono)}
+  .wktot b{font-size:16px;font-weight:600;color:var(--accent-2)}
+  .wkbody{border-top:1px solid var(--border);padding:8px 12px 14px;background:var(--panel-2)}
+  .cwfilter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 2px 12px}
+  .cwfilter label{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);font-weight:600}
+  .cwcount{font-size:12px;color:var(--fg-muted);margin-left:auto;font-family:var(--font-mono)}
+  .milldd{position:relative;display:inline-block}
+  .ddbtn{display:inline-flex;align-items:center;gap:12px;justify-content:space-between;font-family:var(--font-sans);font-size:13px;font-weight:500;color:var(--fg);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;min-width:220px}
+  .ddbtn:hover{border-color:var(--accent)}
+  .ddchev{color:var(--fg-muted);font-size:11px}
+  .ddpop{position:absolute;left:0;top:calc(100% + 5px);z-index:30;width:300px;max-width:82vw;background:var(--panel);border:1px solid var(--border);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.18);padding:7px}
+  .ddsearch{width:100%;font-family:var(--font-sans);font-size:13px;color:var(--fg);background:var(--panel-2);border:1px solid var(--border);border-radius:7px;padding:8px 10px;outline:none;margin-bottom:6px}
+  .ddsearch:focus{border-color:var(--accent)}
+  .ddlist{max-height:280px;overflow-y:auto}
+  .dditem{padding:8px 10px;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dditem:hover{background:var(--panel-2)}
+  .dditem.sel{background:color-mix(in srgb,var(--accent-2) 16%,transparent);color:var(--accent-2);font-weight:600}
+  .ddempty{padding:10px;color:var(--fg-muted);font-size:12.5px}
+
+  .by{border:1px solid var(--border);border-radius:9px;background:var(--panel);margin-top:8px;overflow:hidden}
+  .byhead{display:grid;grid-template-columns:16px 1fr auto;gap:10px;align-items:center;padding:10px 12px;cursor:pointer}
+  .byhead:hover{background:var(--panel-2)}
+  .by.open > .byhead .chev{transform:rotate(90deg)}
+  .byname{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bysub{font-size:11px;color:var(--fg-muted);margin-top:1px}
+  .bytot{text-align:right;font-family:var(--font-mono);font-size:12.5px}
+  .bytot b{font-weight:600;color:var(--accent-2)}
+  .bybody{border-top:1px solid var(--border);padding:4px 12px 12px;background:var(--panel-3)}
+
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+  th{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--fg-muted);font-weight:600}
+  td.n,th.n{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  .mode{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-muted)}
+  .comm{color:var(--accent-2);font-weight:600}
+  .total-row td{border-top:2px solid var(--border);font-weight:600}
+  a.viewbill{color:var(--accent);text-decoration:none;font-weight:600;font-size:11px;white-space:nowrap}
+  a.viewbill:hover{text-decoration:underline}
+
+  #load{color:var(--fg-muted);font-family:var(--font-mono);font-size:13px;margin-top:30px}
+  #err{color:var(--bad);margin-top:20px}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.spin{animation:none}}
+  @media (max-width:520px){ .wkhead,.byhead{grid-template-columns:16px 1fr auto;gap:8px} .wklabel{font-size:13.5px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to dashboard</a>
+  <div class="eyebrow">Ronak Agency</div>
+  <h1>Weekly commission</h1>
+  <div class="sub">What you earned each week and from which manufacturer &mdash; tap a week, then a manufacturer, to see each commission bill and open it</div>
+  <div class="altlink"><span style="color:var(--fg-muted)">Commission grouped by manufacturer</span></div>
+
+  <div id="load"><span class="spin"></span>Reading commission&hellip;</div>
+  <div id="err" hidden></div>
+  <div class="list" id="list"></div>
+</div>
+
+  <script src="data.js"></script>
+<script>
+  var weekCache={};
+  function grp(n){ n=Math.round(n).toString(); var l3=n.slice(-3),r=n.slice(0,-3); if(r) l3=","+l3; return r.replace(/\B(?=(\d{2})+(?!\d))/g,",")+l3; }
+  function cr(n){ return (n/1e7).toFixed(2); }
+  function lk(n){ return (n/1e5).toFixed(2); }
+  function smart(n){ return n>=1e7 ? "₹"+cr(n)+" Cr" : n>=1e5 ? "₹"+lk(n)+" L" : "₹"+grp(n); }
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+  var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function fmtDate(s){ if(!s) return ""; var p=String(s).split("-"); if(p.length!==3) return s; return parseInt(p[2],10)+"-"+MON[parseInt(p[1],10)-1]+"-"+p[0]; }
+
+  // searchable dropdown; onChange(value) with "" = all
+  function makeDropdown(names, onChange){
+    var root=document.createElement("div"); root.className="milldd";
+    var opts=[{v:"",l:"All manufacturers ("+names.length+")"}].concat(names.map(function(n){return {v:n,l:n};}));
+    var sel=opts[0];
+    var btn=document.createElement("button"); btn.type="button"; btn.className="ddbtn";
+    btn.innerHTML='<span class="ddlabel"></span><span class="ddchev">▾</span>';
+    var pop=document.createElement("div"); pop.className="ddpop"; pop.hidden=true;
+    var search=document.createElement("input"); search.className="ddsearch"; search.type="text"; search.placeholder="Search manufacturer…";
+    var list=document.createElement("div"); list.className="ddlist";
+    pop.appendChild(search); pop.appendChild(list); root.appendChild(btn); root.appendChild(pop);
+    function setLabel(){ btn.querySelector(".ddlabel").textContent=sel.l; }
+    function renderList(){
+      var qv=search.value.trim().toLowerCase();
+      var shown=opts.filter(function(o){ return !qv || o.l.toLowerCase().indexOf(qv)>=0; });
+      list.innerHTML="";
+      if(!shown.length){ var e=document.createElement("div"); e.className="ddempty"; e.textContent="No manufacturer matches"; list.appendChild(e); return; }
+      shown.forEach(function(o){
+        var it=document.createElement("div"); it.className="dditem"+(o.v===sel.v?" sel":""); it.textContent=o.l;
+        it.addEventListener("click",function(){ sel=o; setLabel(); close(); onChange(o.v); });
+        list.appendChild(it);
+      });
+    }
+    function open(){ pop.hidden=false; search.value=""; renderList(); setTimeout(function(){search.focus();},0); }
+    function close(){ pop.hidden=true; }
+    btn.addEventListener("click",function(e){ e.stopPropagation(); if(pop.hidden) open(); else close(); });
+    search.addEventListener("input",renderList);
+    search.addEventListener("keydown",function(e){ if(e.key==="Escape"){close();} else if(e.key==="Enter"){ e.preventDefault(); var f=list.querySelector(".dditem"); if(f) f.click(); } });
+    document.addEventListener("click",function(e){ if(!root.contains(e.target)) close(); });
+    setLabel();
+    return root;
+  }
+
+  function renderWeeks(d){
+    document.getElementById("load").hidden=true;
+    var list=document.getElementById("list"); clear(list);
+    d.weeks.forEach(function(w){
+      var wk=document.createElement("div"); wk.className="wk";
+      var head=document.createElement("div"); head.className="wkhead";
+      head.innerHTML='<div class="chev">▶</div>'+
+        '<div><div class="wklabel">'+esc(w.label)+'</div><div class="wkmeta">'+w.bills+' commission bills · '+w.mills+' manufacturers</div></div>'+
+        '<div class="wktot"><b>'+smart(w.total)+'</b></div>';
+      var body=document.createElement("div"); body.className="wkbody"; body.hidden=true;
+      head.addEventListener("click",function(){
+        var open=wk.classList.toggle("open"); body.hidden=!open;
+        if(open && !body.dataset.filled){ loadWeek(w.start, body); }
+      });
+      wk.appendChild(head); wk.appendChild(body); list.appendChild(wk);
+    });
+  }
+
+  function loadWeek(start, body){
+    body.dataset.filled="1";
+    body.innerHTML='<div style="color:var(--fg-muted);font-size:12.5px;padding:8px 2px"><span class="spin"></span>Loading manufacturers&hellip;</div>';
+    var done=function(d){
+      if(!d.ok){ body.innerHTML='<div style="color:var(--bad);font-size:12.5px;padding:8px 2px">'+esc(d.error||"failed")+'</div>'; return; }
+      clear(body);
+      if(!d.mills.length){ body.innerHTML='<div style="color:var(--fg-muted);font-size:12.5px;padding:10px 2px">No commission bills for this week.</div>'; return; }
+      // flatten every mill's bills into one list, tagged with the mill name
+      var flat=[];
+      d.mills.forEach(function(m){ m.items.forEach(function(it){ flat.push({vno:it.vno,date:it.date,buyer:it.buyer,mode:it.mode,amount:it.amount,nbills:it.nbills,mill:m.name}); }); });
+      flat.sort(function(a,b){ return a.date<b.date?1:(a.date>b.date?-1:b.amount-a.amount); });
+      var millNames=d.mills.map(function(m){return m.name;}).sort(function(a,b){return a.localeCompare(b);});
+
+      var bar=document.createElement("div"); bar.className="cwfilter";
+      var lbl=document.createElement("label"); lbl.textContent="Filter by manufacturer";
+      var cnt=document.createElement("span"); cnt.className="cwcount";
+      bar.appendChild(lbl);
+      bar.appendChild(makeDropdown(millNames, function(val){ draw(val); }));
+      bar.appendChild(cnt);
+      body.appendChild(bar);
+      var tblWrap=document.createElement("div"); tblWrap.className="chart-wrap"; body.appendChild(tblWrap);
+
+      function draw(mill){
+        var rows=mill?flat.filter(function(r){return r.mill===mill;}):flat;
+        var tot=0; rows.forEach(function(r){tot+=r.amount;});
+        bar.querySelector(".cwcount").textContent=rows.length+" commission bill"+(rows.length===1?"":"s")+" · "+smart(tot);
+        var t='<table><thead><tr><th>Date</th><th>CM #</th><th>Manufacturer</th><th>On sales to (buyer)</th><th class="n">Sale bills</th><th>Mode</th><th class="n">Commission</th><th></th></tr></thead><tbody>';
+        rows.forEach(function(r){
+          t+='<tr><td class="tnum">'+esc(fmtDate(r.date))+'</td><td class="tnum">'+r.vno+'</td><td>'+esc(r.mill)+'</td><td>'+esc(r.buyer)+'</td>'+
+             '<td class="n">'+r.nbills+'</td><td class="mode">'+esc(r.mode||"—")+'</td><td class="n comm">'+smart(r.amount)+'</td>'+
+             '<td class="n"><a class="viewbill" href="commbill.html?vno='+r.vno+'" target="_blank" rel="noopener">View ↗</a></td></tr>';
+        });
+        t+='</tbody></table>';
+        tblWrap.innerHTML=t;
+      }
+      draw("");
+    };
+    if(weekCache[start]){ done(weekCache[start]); return; }
+    fetch("/api/comm-week?start="+start,{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){ weekCache[start]=d; done(d); })
+      .catch(function(e){ body.innerHTML='<div style="color:var(--bad);font-size:12.5px;padding:8px 2px">Could not load: '+esc(e.message)+'</div>'; });
+  }
+
+  fetch("/api/comm-weeks",{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+    if(!d.ok) throw new Error(d.error||"failed");
+    renderWeeks(d);
+  }).catch(function(e){
+    document.getElementById("load").hidden=true;
+    var er=document.getElementById("err"); er.hidden=false;
+    er.innerHTML="Can't load weekly commission. The <b>Start Dashboard.cmd</b> window must be open. ("+esc(e.message)+")";
+  });
+</script>
+</body>
+</html>

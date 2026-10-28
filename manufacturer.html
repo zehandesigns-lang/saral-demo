@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Manufacturer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" />
+<style>
+  :root{
+    --bg:#f6f4ef; --panel:#ffffff; --panel-2:#faf8f3;
+    --fg:#1f2430; --fg-muted:#6f6a62; --border:#e6e1d8;
+    --accent:#2f4bd6; --accent-2:#148a7c; --good:#2e9e5b; --warn:#c08a1e; --bad:#c6482f;
+    --font-display:"Fraunces",Georgia,serif; --font-sans:"IBM Plex Sans",system-ui,sans-serif; --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22; --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
+    --accent:#7389ff; --accent-2:#3dc6b4; --good:#49bd74; --warn:#e0b150; --bad:#e2654a; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22; --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
+    --accent:#7389ff; --accent-2:#3dc6b4; --good:#49bd74; --warn:#e0b150; --bad:#e2654a; color-scheme:dark;
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding-block:28px;padding-left:20px;padding-right:20px}
+  .tnum{font-variant-numeric:tabular-nums} [hidden]{display:none!important}
+  a.back{display:inline-flex;gap:6px;font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;margin-bottom:14px} a.back:hover{text-decoration:underline}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2);font-weight:600;margin-bottom:6px}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,36px);margin:0;line-height:1.05}
+  .meta{color:var(--fg-muted);font-size:13px;margin-top:6px;display:flex;flex-wrap:wrap;gap:4px 16px}
+  .meta .gst b{color:var(--fg)}
+  .hr{border-bottom:1px solid var(--border);margin-top:18px}
+
+  .filters{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
+  .fgroup{display:flex;flex-direction:column;gap:6px}
+  .fgroup .lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);font-weight:600}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:9px;overflow:hidden;flex-wrap:wrap}
+  .seg button{font-family:var(--font-sans);font-size:12.5px;font-weight:600;padding:7px 12px;border:none;background:var(--panel);color:var(--fg-muted);cursor:pointer;border-right:1px solid var(--border)}
+  .seg button:last-child{border-right:none}
+  .seg button.on{background:var(--accent);color:#fff}
+  .seg.status button.on[data-s="paid"]{background:var(--good)} .seg.status button.on[data-s="unpaid"]{background:var(--bad)}
+
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+  .tile{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 15px}
+  .tile .l{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--fg-muted);font-weight:600}
+  .tile .v{font-family:var(--font-display);font-weight:600;font-size:clamp(20px,3.2vw,26px);margin-top:7px;line-height:1}
+  .tile.pend .v{color:var(--bad)} .tile.paid .v{color:var(--good)}
+
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:6px 14px 10px;margin-top:18px}
+  .chart-wrap{width:100%;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--border);white-space:nowrap}
+  th{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--fg-muted);font-weight:600;position:sticky;top:0;background:var(--panel)}
+  td.n,th.n{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+  .mode{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-muted)}
+  .comm{color:var(--accent-2);font-weight:600}
+  .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em}
+  .badge.paid{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+  .badge.unpaid{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+  .badge.partial{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+  a.viewbill{color:var(--accent);text-decoration:none;font-weight:600;font-size:11px} a.viewbill:hover{text-decoration:underline}
+  .count{font-size:12px;color:var(--fg-muted);margin:12px 2px 2px}
+  #load{color:var(--fg-muted);font-family:var(--font-mono);font-size:13px;margin-top:30px}
+  #err{color:var(--bad);margin-top:20px}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.spin{animation:none}}
+  @media (max-width:640px){ .tiles{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to dashboard</a>
+  <div id="load"><span class="spin"></span>Reading manufacturer&hellip;</div>
+  <div id="err" hidden></div>
+
+  <div id="head" hidden>
+    <div class="eyebrow">Manufacturer</div>
+    <h1 id="mname"></h1>
+    <div class="meta" id="mmeta"></div>
+    <div class="hr"></div>
+
+    <div class="filters">
+      <div class="fgroup"><span class="lbl">Period</span>
+        <div class="seg period" id="periodSeg">
+          <button data-p="all" class="on">All time</button>
+          <button data-p="7">Last week</button>
+          <button data-p="30">Last month</button>
+          <button data-p="90">Last 3 months</button>
+          <button data-p="365">Last year</button>
+        </div>
+      </div>
+      <div class="fgroup"><span class="lbl">Status</span>
+        <div class="seg status" id="statusSeg">
+          <button data-s="all" class="on">All</button>
+          <button data-s="unpaid">Unpaid</button>
+          <button data-s="paid">Paid</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tiles" id="tiles"></div>
+    <div class="count" id="count"></div>
+    <div class="panel"><div class="chart-wrap"><table id="tbl">
+      <thead><tr><th>Date</th><th>CM #</th><th>On sales to (buyer)</th><th class="n">Sale bills</th><th>Mode</th><th class="n">Commission</th><th>Status</th><th></th></tr></thead>
+      <tbody></tbody></table></div></div>
+  </div>
+</div>
+
+  <script src="data.js"></script>
+<script>
+  var DATA=null, period="all", status="all";
+  function grp(n){ n=Math.round(n).toString(); var l3=n.slice(-3),r=n.slice(0,-3); if(r) l3=","+l3; return r.replace(/\B(?=(\d{2})+(?!\d))/g,",")+l3; }
+  function cr(n){ return (n/1e7).toFixed(2); }
+  function lk(n){ return (n/1e5).toFixed(2); }
+  function smart(n){ return n>=1e7 ? "₹"+cr(n)+" Cr" : n>=1e5 ? "₹"+lk(n)+" L" : "₹"+grp(n); }
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+  function q(name){ var m=new RegExp("[?&]"+name+"=([^&]+)").exec(location.search); return m?decodeURIComponent(m[1]):""; }
+
+  function cutoff(){ if(period==="all") return null; var d=new Date(DATA.asof+"T00:00:00"); d.setDate(d.getDate()-parseInt(period,10)+1); return d.toISOString().slice(0,10); }
+  function filtered(){ var co=cutoff(); return DATA.bills.filter(function(b){ if(status!=="all" && b.status!==status) return false; if(co && b.date<co) return false; return true; }); }
+
+  function render(){
+    var rows=filtered(), tot=0,paid=0,pend=0;
+    rows.forEach(function(b){ tot+=b.amount; paid+=b.paid; pend+=b.pending; });
+    var tiles=[{l:"Commission bills",v:grp(rows.length),cls:""},{l:"Commission billed",v:smart(tot),cls:""},{l:"Collected",v:smart(paid),cls:"paid"},{l:"Pending",v:smart(pend),cls:"pend"}];
+    var tg=document.getElementById("tiles"); tg.innerHTML="";
+    tiles.forEach(function(t){ var e=document.createElement("div"); e.className="tile "+t.cls; e.innerHTML='<div class="l">'+t.l+'</div><div class="v tnum">'+t.v+'</div>'; tg.appendChild(e); });
+    var cap=rows.length>800;
+    document.getElementById("count").textContent="Showing "+(cap?"first 800 of ":"")+grp(rows.length)+" commission bill"+(rows.length===1?"":"s")+(period==="all"?" (all time)":" in period")+(status==="all"?"":", "+status);
+    var show=cap?rows.slice(0,800):rows, t="";
+    show.forEach(function(b){
+      t+='<tr><td class="tnum">'+esc(b.date)+'</td><td class="tnum">'+b.vno+'</td><td>'+esc(b.buyer)+'</td>'+
+         '<td class="n">'+b.nbills+'</td><td class="mode">'+esc(b.mode||"—")+'</td><td class="n comm">'+smart(b.amount)+'</td>'+
+         '<td><span class="badge '+b.status+'">'+b.status+'</span></td>'+
+         '<td class="n"><a class="viewbill" href="commbill.html?vno='+b.vno+'" target="_blank" rel="noopener">View ↗</a></td></tr>';
+    });
+    document.querySelector("#tbl tbody").innerHTML=t;
+  }
+  function wire(segId,set){ document.querySelectorAll("#"+segId+" button").forEach(function(btn){ btn.addEventListener("click",function(){ document.querySelectorAll("#"+segId+" button").forEach(function(b){ b.classList.remove("on"); }); btn.classList.add("on"); set(btn); render(); }); }); }
+
+  fetch("/api/mill?cd="+encodeURIComponent(q("cd")),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+    if(!d.ok) throw new Error(d.error||"not found");
+    DATA=d;
+    document.getElementById("load").hidden=true;
+    document.getElementById("head").hidden=false;
+    document.title=d.mill.name;
+    document.getElementById("mname").textContent=d.mill.name;
+    var m=[]; var loc=[d.mill.city,d.mill.state].filter(Boolean).join(", ");
+    if(loc) m.push('<span>'+esc(loc)+'</span>');
+    if(d.mill.mobile) m.push('<span>Ph: '+esc(d.mill.mobile)+'</span>');
+    if(d.mill.gstin) m.push('<span class="gst">GSTIN <b>'+esc(d.mill.gstin)+'</b></span>');
+    document.getElementById("mmeta").innerHTML=m.join("");
+    wire("periodSeg",function(btn){ period=btn.dataset.p; });
+    wire("statusSeg",function(btn){ status=btn.dataset.s; });
+    render();
+  }).catch(function(e){
+    document.getElementById("load").hidden=true;
+    var er=document.getElementById("err"); er.hidden=false;
+    er.innerHTML="Couldn't load this manufacturer. The <b>demo</b> window must be open. ("+esc(e.message)+")";
+  });
+</script>
+</body>
+</html>

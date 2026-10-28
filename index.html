@@ -2,403 +2,516 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Ronak Agency — Demo</title>
+<title>Ronak Agency Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="description" content="Commission-agent dashboard demo (sample data)." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" />
 <style>
   :root{
-    --bg:#f6f4ef; --panel:#ffffff; --panel-2:#faf8f3; --panel-3:#f1eee7;
+    --bg:#f6f4ef; --panel:#ffffff; --panel-2:#faf8f3;
     --fg:#1f2430; --fg-muted:#6f6a62; --border:#e6e1d8;
-    --accent:#2f4bd6; --accent-2:#148a7c; --good:#2e9e5b; --warn:#c08a1e; --bad:#c6482f; --grid:#ece7dd;
-    --font-display:"Fraunces",Georgia,serif; --font-sans:"IBM Plex Sans",system-ui,sans-serif; --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+    --accent:#2f4bd6; --accent-2:#148a7c;
+    --good:#2e9e5b; --warn:#c08a1e; --bad:#c6482f;
+    --grid:#ece7dd;
+    --font-display:"Fraunces",Georgia,serif;
+    --font-sans:"IBM Plex Sans",system-ui,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,monospace;
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22; --panel-3:#23272f; --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
-    --accent:#7389ff; --accent-2:#3dc6b4; --good:#49bd74; --warn:#e0b150; --bad:#e2654a; --grid:#262a32; color-scheme:dark;
+    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22;
+    --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
+    --accent:#7389ff; --accent-2:#3dc6b4;
+    --good:#49bd74; --warn:#e0b150; --bad:#e2654a;
+    --grid:#262a32; color-scheme:dark;
   }}
   :root[data-theme="dark"]{
-    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22; --panel-3:#23272f; --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
-    --accent:#7389ff; --accent-2:#3dc6b4; --good:#49bd74; --warn:#e0b150; --bad:#e2654a; --grid:#262a32; color-scheme:dark;
+    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22;
+    --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
+    --accent:#7389ff; --accent-2:#3dc6b4;
+    --good:#49bd74; --warn:#e0b150; --bad:#e2654a;
+    --grid:#262a32; color-scheme:dark;
   }
-  *{box-sizing:border-box} html,body{margin:0}
+  *{box-sizing:border-box}
+  html,body{margin:0}
   body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);line-height:1.5;-webkit-font-smoothing:antialiased}
   .wrap{max-width:1040px;margin:0 auto;padding-block:28px;padding-left:20px;padding-right:20px}
-  .tnum{font-variant-numeric:tabular-nums} [hidden]{display:none!important}
+  .tnum{font-variant-numeric:tabular-nums}
+  [hidden]{display:none!important}
 
   header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 20px;border-bottom:1px solid var(--border);padding-bottom:18px}
   .brand{display:flex;flex-direction:column;gap:6px;min-width:0}
   .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
-  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,5vw,42px);margin:0;line-height:1.02;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .demopill{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);background:color-mix(in srgb,var(--warn) 12%,transparent);border-radius:20px;padding:3px 10px}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,5vw,42px);margin:0;line-height:1.02;text-wrap:balance}
   .sub{color:var(--fg-muted);font-size:13.5px}
+  .controls{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-sans);font-size:13.5px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:9px;padding:9px 16px;cursor:pointer;transition:opacity .15s}
+  .btn:hover{opacity:.9}
+  .btn:disabled{opacity:.55;cursor:default}
+  .btn .spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.btn .spin{animation:none}}
   .status{font-family:var(--font-mono);font-size:11.5px;color:var(--fg-muted);text-align:right;line-height:1.6}
+  .status b{color:var(--fg);font-weight:600}
 
-  .search{position:relative;margin-top:18px}
-  #searchInput{width:100%;font-family:var(--font-sans);font-size:15px;color:var(--fg);background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px 16px;outline:none}
-  #searchInput:focus{border-color:var(--accent)}
-  #searchInput::placeholder{color:var(--fg-muted)}
-  .results{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--border);border-radius:11px;box-shadow:0 8px 24px rgba(0,0,0,.14);z-index:20;max-height:360px;overflow-y:auto;padding:5px}
-  .results .item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;color:var(--fg)}
-  .results .item:hover{background:var(--panel-2)}
-  .results .item .nm{font-size:13.5px;font-weight:500}
-  .results .item .ct{font-size:11.5px;color:var(--fg-muted);font-family:var(--font-mono)}
-  .ptag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 6px;border-radius:5px;margin-right:8px;vertical-align:1px}
-  .ptag.buyer{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
-  .ptag.manuf{background:color-mix(in srgb,var(--accent-2) 18%,transparent);color:var(--accent-2)}
-  .results .empty{padding:12px;color:var(--fg-muted);font-size:13px}
+  .banner{margin-top:16px;border-radius:12px;padding:12px 16px;font-size:13.5px;display:flex;align-items:center;gap:10px;border:1px solid}
+  .banner.same{background:color-mix(in srgb,var(--fg-muted) 10%,transparent);border-color:var(--border);color:var(--fg-muted)}
+  .banner.new{background:color-mix(in srgb,var(--good) 14%,transparent);border-color:color-mix(in srgb,var(--good) 40%,transparent);color:var(--fg)}
+  .banner.err{background:color-mix(in srgb,var(--bad) 12%,transparent);border-color:color-mix(in srgb,var(--bad) 40%,transparent);color:var(--fg)}
+  .banner .bdot{width:9px;height:9px;border-radius:50%;flex:none}
+  .toastwrap{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;max-width:92vw}
+  .toast{pointer-events:auto;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:11px;box-shadow:0 10px 30px rgba(0,0,0,.2);padding:11px 16px;font-size:13.5px;color:var(--fg);opacity:0;transform:translateY(10px);transition:opacity .22s ease,transform .22s ease;max-width:90vw}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .toast .tdot{width:9px;height:9px;border-radius:50%;flex:none}
+  .toast.same .tdot{background:var(--fg-muted)}
+  .toast.new .tdot{background:var(--good)}
+  .toast.err .tdot{background:var(--bad)}
+  @media (prefers-reduced-motion:reduce){ .toast{transition:none} }
 
   section{margin-top:34px}
   .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
   h2{font-family:var(--font-display);font-weight:600;font-size:20px;margin:0}
   .sec-note{color:var(--fg-muted);font-size:12.5px}
 
-  #thisweek{border:1px solid var(--border);border-radius:18px;padding:18px;background:color-mix(in srgb,var(--accent) 4%,var(--panel))}
-  #thisweek .sec-head{margin-top:0}
-
   .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  #weekStats{grid-template-columns:repeat(2,1fr)}
   .kpi{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px}
   .kpi .label{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--fg-muted);font-weight:600;display:flex;align-items:center;gap:7px}
   .dot{width:8px;height:8px;border-radius:50%;flex:none}
-  .kpi .val{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4vw,32px);margin-top:9px;line-height:1;letter-spacing:-.01em}
+  .kpi .val{font-family:var(--font-display);font-weight:600;font-size:clamp(26px,4.4vw,34px);margin-top:9px;line-height:1;letter-spacing:-.01em}
   .kpi .val .unit{font-size:15px;color:var(--fg-muted);font-family:var(--font-sans);font-weight:500;margin-left:3px}
   .kpi .foot{margin-top:8px;font-size:12px;color:var(--fg-muted)}
+  a.kpi{text-decoration:none;color:inherit;display:block;transition:border-color .15s,transform .05s}
+  a.kpi:hover{border-color:var(--accent)}
+  a.kpi .more{margin-top:8px;font-size:12px;color:var(--accent);font-weight:600}
+  a.blink{color:var(--accent);text-decoration:none;font-weight:600}
+  a.blink:hover{text-decoration:underline}
+  .search{position:relative;margin-top:18px}
+  #searchInput{width:100%;font-family:var(--font-sans);font-size:15px;color:var(--fg);background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px 16px;outline:none}
+  #searchInput:focus{border-color:var(--accent)}
+  #searchInput::placeholder{color:var(--fg-muted)}
+  .results{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--border);border-radius:11px;box-shadow:0 8px 24px rgba(0,0,0,.14);z-index:20;max-height:360px;overflow-y:auto;padding:5px}
+  .results .item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;text-decoration:none;color:var(--fg)}
+  .results .item:hover,.results .item.active{background:var(--panel-2)}
+  .results .item .nm{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .results .item .ct{font-size:11.5px;color:var(--fg-muted);font-family:var(--font-mono);white-space:nowrap}
+  .ptag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 6px;border-radius:5px;margin-right:8px;vertical-align:1px}
+  .ptag.buyer{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+  .ptag.mill{background:color-mix(in srgb,var(--accent-2) 18%,transparent);color:var(--accent-2)}
+  .results .empty{padding:12px;color:var(--fg-muted);font-size:13px}
 
   .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
   .chart-wrap{width:100%;overflow-x:auto}
   svg{display:block;max-width:100%}
-  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--fg-muted);margin-bottom:12px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--fg-muted);margin-top:4px;margin-bottom:12px}
   .legend span{display:inline-flex;align-items:center;gap:7px}
   .swatch{width:12px;height:12px;border-radius:3px;flex:none}
   .swatch.line{height:3px;border-radius:2px;width:16px}
 
+  .barlist{display:flex;flex-direction:column;gap:9px}
+  .row{display:grid;grid-template-columns:minmax(120px,1.3fr) 3fr auto;align-items:center;gap:12px}
+  .row .nm{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track{height:20px;background:var(--panel-2);border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+  .fill{height:100%;border-radius:6px 0 0 6px}
+  .row .amt{font-family:var(--font-mono);font-size:12.5px;text-align:right;white-space:nowrap}
+  .row .amt b{font-weight:600}
+
   .split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .callout{border-left:3px solid var(--accent);background:var(--panel-2);border-radius:0 10px 10px 0;padding:12px 15px;font-size:13.5px}
+  .callout{border-left:3px solid var(--accent);background:var(--panel-2);border-radius:0 10px 10px 0;padding:12px 15px;font-size:13.5px;color:var(--fg)}
   .callout b{font-weight:600}
+  .wk-cap{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--fg-muted);font-weight:600;margin-bottom:12px}
+  #thisweek{border:1px solid var(--border);border-radius:18px;padding:18px;background:color-mix(in srgb,var(--accent) 4%,var(--panel))}
+  #thisweek .sec-head{margin-top:0}
+  #weekStats{grid-template-columns:repeat(2,1fr)}
+  @media (max-width:560px){ #weekStats{grid-template-columns:1fr} }
 
   table{width:100%;border-collapse:collapse;font-size:13px}
   th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
   th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--fg-muted);font-weight:600}
   td.n,th.n{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
   tr:last-child td{border-bottom:none}
-  .linkname{color:var(--accent);font-weight:600;cursor:pointer}
-  .linkname:hover{text-decoration:underline}
-  .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em}
-  .badge.paid{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
-  .badge.unpaid{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
 
   footer{margin-top:38px;border-top:1px solid var(--border);padding-top:16px;color:var(--fg-muted);font-size:12.5px}
+  footer h3{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--fg);margin:0 0 8px}
+  footer ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+  .flag{color:var(--bad);font-weight:600}
+  code{font-family:var(--font-mono);font-size:12px;background:var(--panel-2);padding:1px 5px;border-radius:4px;border:1px solid var(--border)}
 
-  /* modal */
-  .ovl{position:fixed;inset:0;background:rgba(10,12,16,.5);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px;overflow-y:auto}
-  .modal{background:var(--panel);border:1px solid var(--border);border-radius:16px;max-width:760px;width:100%;padding:22px 22px 18px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-  .modal .mh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  .modal h3{font-family:var(--font-display);font-weight:600;font-size:22px;margin:0}
-  .modal .msub{color:var(--fg-muted);font-size:12.5px;margin-top:4px}
-  .xbtn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--fg-muted);font-size:16px;cursor:pointer;padding:4px 11px;line-height:1}
-  .mtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
-  .mtile{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:11px 13px}
-  .mtile .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-muted);font-weight:600}
-  .mtile .v{font-family:var(--font-display);font-weight:600;font-size:19px;margin-top:5px}
-  .mtile.pend .v{color:var(--bad)} .mtile.paid .v{color:var(--good)}
+  #loadOverlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:10}
+  #loadOverlay .spin{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite}
+  #loadOverlay .t{font-family:var(--font-mono);font-size:12.5px;color:var(--fg-muted)}
 
-  @media (max-width:720px){ .kpis{grid-template-columns:repeat(2,1fr)} .split{grid-template-columns:1fr} .mtiles{grid-template-columns:1fr 1fr} }
-  @media (max-width:560px){ #weekStats{grid-template-columns:1fr} }
-  @media (max-width:430px){ .kpis{grid-template-columns:1fr 1fr} }
+  @media (max-width:720px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .split{grid-template-columns:1fr}
+    .row{grid-template-columns:minmax(96px,1.2fr) 2fr auto;gap:9px}
+    .controls{align-items:flex-start}
+    .status{text-align:left}
+  }
+  @media (max-width:430px){ .kpis{grid-template-columns:1fr 1fr} .row .amt{font-size:11.5px} }
 </style>
 </head>
 <body>
+<div id="loadOverlay"><div class="spin"></div><div class="t">Loading demo&hellip;</div></div>
+
 <div class="wrap">
   <header class="top">
     <div class="brand">
       <div class="eyebrow">Commission Agent &middot; Textiles &middot; Ahmedabad</div>
-      <h1>Ronak Agency <span class="demopill">Demo</span></h1>
-      <div class="sub">A working preview of the live dashboard &mdash; all figures below are sample data.</div>
+      <h1>Ronak Agency</h1>
+      <div class="sub">Interactive demo - sample data (all figures are fabricated)</div>
     </div>
-    <div class="status" id="status"></div>
+    <div class="controls">
+      <button class="btn" id="refreshBtn"><span id="btnTxt">Refresh data</span></button>
+      <div class="status" id="status"></div>
+    </div>
   </header>
 
   <div class="search" id="search">
-    <input type="text" id="searchInput" placeholder="Search a customer or manufacturer by name&hellip;" autocomplete="off" />
+    <input type="text" id="searchInput" placeholder="Search a buyer or manufacturer by name&hellip;" autocomplete="off" />
     <div class="results" id="searchResults" hidden></div>
   </div>
+
+  <div class="banner" id="banner" hidden></div>
+  <div class="toastwrap" id="toasts"></div>
 
   <section id="thisweek">
     <div class="sec-head"><h2>This week</h2><span class="sec-note" id="weekRange"></span></div>
     <div class="kpis" id="weekStats"></div>
+    <div class="panel" style="margin-top:16px">
+      <div class="wk-cap">Collection worklist &mdash; call these first</div>
+      <div class="chart-wrap"><table id="worklistTable">
+        <thead><tr><th class="n">#</th><th>Buyer</th><th>City</th><th class="n">Outstanding</th><th class="n">Oldest&nbsp;bill</th><th>Agent</th><th>Contact</th></tr></thead>
+        <tbody></tbody></table></div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <div class="wk-cap">Aging alarms &mdash; bills that just crossed a danger line</div>
+      <div id="agingAlarms" class="chart-wrap"></div>
+    </div>
   </section>
 
   <section id="kpis">
-    <div class="sec-head"><h2>The big picture</h2><span class="sec-note">Sample period</span></div>
+    <div class="sec-head"><h2>The big picture</h2><span class="sec-note">Sample data</span></div>
     <div class="kpis" id="kpiGrid"></div>
   </section>
 
   <section id="outstanding">
-    <div class="sec-head"><h2>Outstanding &amp; ageing</h2><span class="sec-note">Bills billed to customers, minus payments received</span></div>
+    <div class="sec-head"><h2>Outstanding &amp; ageing</h2><span class="sec-note" id="osAsOf"></span></div>
     <div class="split">
       <div style="display:flex;flex-direction:column;gap:14px">
         <div class="panel">
-          <div class="kpi" style="border:none;padding:0">
-            <div class="label">Total outstanding</div>
-            <div class="val tnum" style="font-family:var(--font-display);font-size:clamp(28px,6vw,40px);margin-top:8px">&#8377;<span id="osTotal">&mdash;</span></div>
-            <div class="foot" id="osFoot"></div>
-          </div>
+          <div class="label" style="font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--fg-muted);font-weight:600">Total outstanding</div>
+          <div class="tnum" style="font-family:var(--font-display);font-weight:600;font-size:clamp(30px,6vw,44px);line-height:1;margin-top:8px">&#8377;<span id="osTotal">&mdash;</span><span style="font-size:17px;color:var(--fg-muted);font-weight:500"> Cr</span></div>
+          <div class="foot" id="osFoot" style="margin-top:8px;font-size:12.5px;color:var(--fg-muted)"></div>
           <div style="margin-top:16px">
             <div style="display:flex;height:26px;border-radius:7px;overflow:hidden;border:1px solid var(--border)" id="ageBar"></div>
             <div id="ageLegend" style="display:flex;flex-direction:column;gap:7px;margin-top:12px"></div>
           </div>
         </div>
+        <div class="callout" id="osCallout"></div>
       </div>
       <div class="panel">
-        <div class="label" style="font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-muted);font-weight:600;margin-bottom:10px">Customers who owe</div>
-        <div class="chart-wrap"><table id="debtorTable"><thead><tr><th>Customer</th><th>City</th><th class="n">Outstanding</th></tr></thead><tbody></tbody></table></div>
+        <div class="label" style="font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--fg-muted);font-weight:600;margin-bottom:10px">Top buyers who owe</div>
+        <div class="chart-wrap"><table id="debtorTable"><thead><tr><th>Buyer</th><th>City</th><th class="n">Outstanding</th></tr></thead><tbody></tbody></table></div>
       </div>
     </div>
   </section>
 
   <section id="trend">
-    <div class="sec-head"><h2>Monthly sales &amp; commission</h2><span class="sec-note">Bars = sales &middot; Line = commission</span></div>
+    <div class="sec-head"><h2>Monthly throughput &amp; commission</h2><span class="sec-note">Bars = goods billed &middot; Line = commission earned</span></div>
     <div class="panel">
       <div class="legend">
-        <span><span class="swatch" style="background:var(--accent)"></span>Sales (&#8377; lakh)</span>
-        <span><span class="swatch line" style="background:var(--accent-2)"></span>Commission (&#8377; thousand)</span>
+        <span><span class="swatch" style="background:var(--accent)"></span>Goods billed (&#8377; crore)</span>
+        <span><span class="swatch line" style="background:var(--accent-2)"></span>Commission earned (&#8377; lakh)</span>
       </div>
       <div class="chart-wrap"><div id="trendChart"></div></div>
     </div>
   </section>
 
-  <section id="manuf">
-    <div class="sec-head"><h2>Top manufacturers</h2><span class="sec-note">By value of goods sold through you</span></div>
-    <div class="panel"><div class="chart-wrap"><table id="manufTable"><thead><tr><th>Manufacturer</th><th class="n">Goods sold</th><th class="n">Bills</th><th class="n">Commission</th></tr></thead><tbody></tbody></table></div></div>
+  <section id="concentration">
+    <div class="sec-head"><h2>Who the business runs through</h2><span class="sec-note">Share of goods billed, by salesman / sub-agent</span></div>
+    <div class="split">
+      <div class="panel"><div class="barlist" id="smanList"></div></div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="callout" id="concCallout"></div>
+        <div class="panel" style="flex:1"><div class="chart-wrap" style="display:flex;justify-content:center;align-items:center;height:100%"><div id="donut"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="suppliers">
+    <div class="sec-head"><h2>Top manufacturers by goods sold</h2><span class="sec-note">Manufacturers whose cloth moves most through you</span></div>
+    <div class="panel"><div class="chart-wrap"><table id="suppTable"><thead><tr><th>Manufacturer</th><th class="n">Goods billed</th><th class="n">Bills</th><th class="n">Avg / bill</th></tr></thead><tbody></tbody></table></div></div>
   </section>
 
   <footer>
-    This is a demonstration build. Manufacturer and customer names are real businesses from the agency's books, but <b>every amount, bill and date shown is randomly generated sample data</b> &mdash; not real financial information. The live product reads the agency's own database directly.
+    <h3>About this dashboard</h3>
+    <ul>
+      <li>Computed live from <code>M00124.mdb</code> each time you press <b>Refresh</b> &mdash; opened <b>read-only</b>, safe to run while SARAL is in use. Goods billed &amp; bills from the <code>SA</code> sale book; commission from the <code>CM</code> ledger; outstanding = each sale bill minus payments recorded against it in the <code>PY</code> book, aged by bill date against today.</li>
+      <li><span class="flag">Standing risks:</span> the data file is large and approaching Access&rsquo;s 2&nbsp;GB ceiling; back it up regularly; nearly all throughput is booked under one person. These don&rsquo;t change between refreshes.</li>
+    </ul>
   </footer>
 </div>
 
-<div id="modalRoot"></div>
-
+  <script src="data.js"></script>
 <script>
-  // ---------- sample dataset ----------
-  var MANUF=[
-    {id:"M1",name:"Jaya Creation (J 4 U)",city:"Ahmedabad",rate:3},
-    {id:"M2",name:"K. Puneet Textile",city:"Ahmedabad",rate:2},
-    {id:"M3",name:"S.Dilipkumar (Shree)",city:"Ahmedabad",rate:2},
-    {id:"M4",name:"Pawanputra Textile",city:"Ahmedabad",rate:3},
-    {id:"M5",name:"Mahi Fashion",city:"Ahmedabad",rate:2}
-  ];
-  var CUST=[
-    {id:"C1",name:"Sri Vaishnavi Retail (India) LLP",city:"Hyderabad"},
-    {id:"C2",name:"Excellent",city:"Hyderabad"},
-    {id:"C3",name:"Arbaz Textiles Pvt Ltd",city:"Secunderabad"},
-    {id:"C4",name:"K.P. Creation",city:"Secunderabad"},
-    {id:"C5",name:"Sri Laxmi Fashion",city:"Hyderabad"}
-  ];
-  var byId={}; MANUF.concat(CUST).forEach(function(p){byId[p.id]=p;});
-  var TODAY=new Date(); TODAY.setHours(0,0,0,0);
+  var state = { prevMarker:null };
 
-  function rng(seed){ return function(){ seed=(seed*1664525+1013904223)>>>0; return seed/4294967296; }; }
-  var rand=rng(20261028);
-  function pick(a){ return a[Math.floor(rand()*a.length)]; }
-  function between(lo,hi){ return lo+Math.floor(rand()*(hi-lo+1)); }
-  function ymd(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
-
-  // generate bills: each customer buys from various manufacturers over ~8 months
-  var BILLS=[], vno=5000;
-  function addBill(daysAgo){
-    var cust=pick(CUST), man=pick(MANUF);
-    var d=new Date(TODAY); d.setDate(d.getDate()-daysAgo);
-    var amount=between(28,165)*1000;
-    var commission=Math.round(amount*man.rate/100);
-    var paid=rand()<0.62;
-    BILLS.push({vno:++vno, no:"B"+vno, date:ymd(d), dObj:d, man:man.id, cust:cust.id,
-      amount:amount, rate:man.rate, commission:commission, paid:paid, paidAmt:paid?amount:0, pending:paid?0:amount});
-  }
-  for(var i=0;i<46;i++){ addBill(between(5,235)); }
-  // guarantee a little activity in the current week for the demo
-  for(var j=0;j<3;j++){ addBill(between(0,(TODAY.getDay()+6)%7)); }
-  BILLS.sort(function(a,b){ return a.date<b.date?1:a.date>b.date?-1:b.amount-a.amount; });
-
-  // ---------- helpers ----------
   function grp(n){ n=Math.round(n).toString(); var l3=n.slice(-3),r=n.slice(0,-3); if(r) l3=","+l3; return r.replace(/\B(?=(\d{2})+(?!\d))/g,",")+l3; }
   function cr(n){ return (n/1e7).toFixed(2); }
-  function lk(n){ return (n/1e5).toFixed(2); }
-  function smart(n){ return n>=1e7 ? "₹"+cr(n)+" Cr" : n>=1e5 ? "₹"+lk(n)+" L" : "₹"+grp(n); }
+  function lk(n){ return (n/1e5).toFixed(1); }
+  function pct(n,d){ return d? (100*n/d).toFixed(1):"0"; }
+  function smart(n){ return n>=1e7 ? "₹"+cr(n)+" Cr" : "₹"+lk(n)+" L"; }
   function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
   function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
-  var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  function fmtDate(s){ var p=String(s).split("-"); return parseInt(p[2],10)+"-"+MON[parseInt(p[1],10)-1]+"-"+p[0]; }
-  function sum(a,f){ var t=0; a.forEach(function(x){t+=f(x);}); return t; }
-  function weekStart(d){ var x=new Date(d); x.setDate(x.getDate()-((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; }
 
-  // ---------- derived ----------
-  var totalSales=sum(BILLS,function(b){return b.amount;});
-  var totalComm=sum(BILLS,function(b){return b.commission;});
-  var totalPending=sum(BILLS,function(b){return b.pending;});
-  var totalPaid=sum(BILLS,function(b){return b.paidAmt;});
-
-  // this week / last week
-  var cw=weekStart(TODAY), lw=new Date(cw); lw.setDate(lw.getDate()-7);
-  function inRange(b,a,z){ return b.dObj>=a && b.dObj<z; }
-  var thisWk=BILLS.filter(function(b){return inRange(b,cw,new Date(cw.getTime()+7*864e5));});
-  var lastWk=BILLS.filter(function(b){return inRange(b,lw,cw);});
-  var wk={
-    salesThis:sum(thisWk,function(b){return b.amount;}), salesLast:sum(lastWk,function(b){return b.amount;}), billsThis:thisWk.length,
-    commThis:sum(thisWk,function(b){return b.commission;}), commLast:sum(lastWk,function(b){return b.commission;}),
-    salesRecvThis:sum(thisWk.filter(function(b){return b.paid;}),function(b){return b.paidAmt;}),
-    salesRecvLast:sum(lastWk.filter(function(b){return b.paid;}),function(b){return b.paidAmt;}),
-    commRecvThis:sum(thisWk.filter(function(b){return b.paid;}),function(b){return b.commission;}),
-    commRecvLast:sum(lastWk.filter(function(b){return b.paid;}),function(b){return b.commission;})
-  };
-
-  // ---------- render ----------
-  document.getElementById("status").innerHTML="Sample data<br>as of "+fmtDate(ymd(TODAY));
-  document.getElementById("weekRange").textContent="Week of "+fmtDate(ymd(cw))+" to "+fmtDate(ymd(TODAY));
-
-  function arrow(cur,prev){ if(!(prev>0)) return ""; var dp=(cur-prev)/prev*100;
-    return dp>=0 ? ' <span style="color:var(--good)">▲'+Math.abs(dp).toFixed(0)+'%</span>' : ' <span style="color:var(--bad)">▼'+Math.abs(dp).toFixed(0)+'%</span>'; }
-
-  (function(){
-    var cards=[
-      {label:"Sales made this week",color:"var(--accent)",val:smart(wk.salesThis),foot:wk.billsThis+" bill"+(wk.billsThis===1?"":"s")+" · vs "+smart(wk.salesLast)+" last week"+arrow(wk.salesThis,wk.salesLast)},
-      {label:"Commission billed this week",color:"var(--accent-2)",val:smart(wk.commThis),foot:"vs "+smart(wk.commLast)+" last week"+arrow(wk.commThis,wk.commLast)},
-      {label:"Money received from sales this week",color:"var(--good)",val:smart(wk.salesRecvThis),foot:"collected from customers · vs "+smart(wk.salesRecvLast)+" last week"+arrow(wk.salesRecvThis,wk.salesRecvLast)},
-      {label:"Commission received this week",color:"var(--good)",val:smart(wk.commRecvThis),foot:"cash in · vs "+smart(wk.commRecvLast)+" last week"+arrow(wk.commRecvThis,wk.commRecvLast)}
-    ];
-    var g=document.getElementById("weekStats");
-    cards.forEach(function(c){ var e=document.createElement("div"); e.className="kpi";
-      e.innerHTML='<div class="label"><span class="dot" style="background:'+c.color+'"></span>'+c.label+'</div><div class="val tnum" style="font-size:clamp(22px,3.6vw,28px)">'+c.val+'</div><div class="foot">'+c.foot+'</div>';
-      g.appendChild(e); });
-  })();
-
-  (function(){
-    var rate=(100*totalComm/totalSales).toFixed(2);
+  function renderKpis(d){
+    var k=d.kpis, rate=pct(k.commission,k.goodsBilled), avg=k.bills? k.goodsBilled/k.bills:0;
     var tiles=[
-      {label:"Goods sold",color:"var(--accent)",val:smart(totalSales),foot:BILLS.length+" bills"},
-      {label:"Commission earned",color:"var(--accent-2)",val:smart(totalComm),foot:"your income"},
-      {label:"Effective rate",color:"var(--good)",val:rate+"%",foot:"commission ÷ sales"},
-      {label:"Collected",color:"var(--good)",val:smart(totalPaid),foot:(100*totalPaid/totalSales).toFixed(0)+"% of sales"},
-      {label:"Active parties",color:"var(--fg-muted)",val:(CUST.length+MANUF.length),foot:CUST.length+" customers · "+MANUF.length+" manufacturers"},
-      {label:"Outstanding",color:"var(--bad)",val:smart(totalPending),foot:BILLS.filter(function(b){return !b.paid;}).length+" open bills"}
+      {label:"Goods billed",color:"var(--accent)",val:"₹"+cr(k.goodsBilled),unit:"Cr",foot:grp(k.bills)+" bills · ₹"+grp(avg)+" avg",href:"sales.html",more:"View weekly sales →"},
+      {label:"Commission earned",color:"var(--accent-2)",val:"₹"+cr(k.commission),unit:"Cr",foot:"your income across the period"},
+      {label:"Effective rate",color:"var(--good)",val:rate,unit:"%",foot:"commission ÷ goods billed"},
+      {label:"GST on bills",color:"var(--warn)",val:"₹"+cr(k.gst),unit:"Cr",foot:"passed through on invoices"},
+      {label:"Active parties",color:"var(--fg-muted)",val:grp(k.customers+k.suppliers),unit:"",foot:grp(k.customers)+" buyers · "+grp(k.suppliers)+" manufacturers"},
+      {label:"Outstanding",color:"var(--bad)",val:"₹"+cr(d.outstanding.total),unit:"Cr",foot:grp(d.outstanding.bills)+" open bills"}
     ];
-    var g=document.getElementById("kpiGrid");
-    tiles.forEach(function(t){ var e=document.createElement("div"); e.className="kpi";
-      e.innerHTML='<div class="label"><span class="dot" style="background:'+t.color+'"></span>'+t.label+'</div><div class="val tnum">'+t.val+'</div><div class="foot">'+t.foot+'</div>';
-      g.appendChild(e); });
-  })();
-
-  (function(){
-    document.getElementById("osTotal").textContent=lk(totalPending);
-    document.getElementById("osTotal").insertAdjacentHTML("afterend",'<span style="font-size:16px;color:var(--fg-muted);font-weight:500"> L</span>');
-    document.getElementById("osFoot").textContent=BILLS.filter(function(b){return !b.paid;}).length+" open bills · "+smart(totalSales)+" billed, "+(100*totalPaid/totalSales).toFixed(0)+"% collected";
-    // ageing
-    var buckets=[["0–30 days",0,30,"var(--good)"],["31–60 days",31,60,"var(--accent-2)"],["61–90 days",61,90,"var(--warn)"],["91–180 days",91,180,"#e0803a"],["Over 180 days",181,99999,"var(--bad)"]];
-    BILLS.filter(function(b){return !b.paid;}).forEach(function(b){
-      var days=Math.round((TODAY-b.dObj)/864e5);
-      for(var i=0;i<buckets.length;i++){ if(days>=buckets[i][1] && days<=buckets[i][2]){ buckets[i][4]=(buckets[i][4]||0)+b.pending; break; } }
+    var g=document.getElementById("kpiGrid"); clear(g);
+    tiles.forEach(function(t){
+      var el=document.createElement(t.href?"a":"div"); el.className="kpi"; if(t.href) el.href=t.href;
+      el.innerHTML='<div class="label"><span class="dot" style="background:'+t.color+'"></span>'+t.label+'</div>'+
+        '<div class="val tnum">'+t.val+'<span class="unit">'+t.unit+'</span></div><div class="foot">'+t.foot+'</div>'+
+        (t.more?'<div class="more">'+t.more+'</div>':'');
+      g.appendChild(el);
     });
-    var bar=document.getElementById("ageBar"), leg=document.getElementById("ageLegend");
-    buckets.forEach(function(bk){ var amt=bk[4]||0; if(!totalPending) return;
-      var seg=document.createElement("div"); seg.style.cssText="width:"+(100*amt/totalPending)+"%;background:"+bk[3]; seg.title=bk[0]+" — "+smart(amt); bar.appendChild(seg);
+  }
+
+  function renderOutstanding(d){
+    var os=d.outstanding;
+    document.getElementById("osAsOf").textContent="As of "+d.week.asof+" — bills billed to buyers minus payments received";
+    document.getElementById("osTotal").textContent=cr(os.total);
+    document.getElementById("osFoot").innerHTML=grp(os.bills)+" open bills · ₹"+cr(os.billed)+" Cr billed, "+pct(os.settled,os.billed)+"% collected";
+    var bar=document.getElementById("ageBar"), leg=document.getElementById("ageLegend"); clear(bar); clear(leg);
+    var colors={"0-30":"var(--good)","31-60":"var(--accent-2)","61-90":"var(--warn)","91-180":"#e0803a","180+":"var(--bad)"};
+    var lbls={"0-30":"0–30 days","31-60":"31–60 days","61-90":"61–90 days","91-180":"91–180 days","180+":"Over 180 days"};
+    var over90=0;
+    d.ageing.forEach(function(a){
+      var bk=a[0],amt=a[1],col=colors[bk]||"var(--accent)";
+      if(bk==="91-180"||bk==="180+") over90+=amt;
+      var seg=document.createElement("div"); seg.style.cssText="width:"+pct(amt,os.total)+"%;background:"+col; seg.title=lbls[bk]+" — "+smart(amt); bar.appendChild(seg);
       var row=document.createElement("div"); row.style.cssText="display:flex;align-items:center;gap:9px;font-size:12.5px";
-      row.innerHTML='<span class="swatch" style="background:'+bk[3]+'"></span><span style="flex:1">'+bk[0]+'</span><span class="tnum" style="font-family:var(--font-mono);color:var(--fg-muted)">'+smart(amt)+'</span><span class="tnum" style="font-family:var(--font-mono);width:44px;text-align:right">'+(totalPending?(100*amt/totalPending).toFixed(0):0)+'%</span>';
+      row.innerHTML='<span class="swatch" style="background:'+col+'"></span><span style="flex:1">'+lbls[bk]+'</span>'+
+        '<span class="tnum" style="font-family:var(--font-mono);color:var(--fg-muted)">'+smart(amt)+'</span>'+
+        '<span class="tnum" style="font-family:var(--font-mono);width:44px;text-align:right">'+pct(amt,os.total)+'%</span>';
       leg.appendChild(row);
     });
-    // debtors
-    var owe={}; BILLS.filter(function(b){return !b.paid;}).forEach(function(b){ owe[b.cust]=(owe[b.cust]||0)+b.pending; });
-    var tb=document.querySelector("#debtorTable tbody");
-    Object.keys(owe).sort(function(a,b){return owe[b]-owe[a];}).forEach(function(id){
-      var p=byId[id], tr=document.createElement("tr");
-      tr.innerHTML='<td><span class="linkname" data-id="'+id+'">'+esc(p.name)+'</span></td><td style="color:var(--fg-muted)">'+esc(p.city)+'</td><td class="n">'+smart(owe[id])+'</td>';
+    document.getElementById("osCallout").innerHTML='<b>'+smart(over90)+' ('+pct(over90,os.total)+'%) is more than 90 days old.</b> '+
+      'That is the money most at risk — worth a focused collection push. Returns of ₹'+cr(os.returns)+' Cr are tracked separately.';
+    var tb=document.querySelector("#debtorTable tbody"); clear(tb);
+    d.debtors.forEach(function(x){
+      var tr=document.createElement("tr");
+      tr.innerHTML='<td>'+(x[3]?'<a class="blink" href="buyer.html?cd='+encodeURIComponent(x[3])+'">'+esc(x[0])+'</a>':esc(x[0]))+'</td><td style="color:var(--fg-muted)">'+esc(x[1])+'</td><td class="n">'+smart(x[2])+'</td>';
       tb.appendChild(tr);
     });
-  })();
-
-  (function(){
-    // monthly
-    var m={};
-    BILLS.forEach(function(b){ var k=b.date.slice(0,7); if(!m[k])m[k]={s:0,c:0}; m[k].s+=b.amount; m[k].c+=b.commission; });
-    var keys=Object.keys(m).sort();
-    var M=keys.map(function(k){ var p=k.split("-"); return [k,m[k].s,m[k].c,MON[+p[1]-1]+" "+p[0].slice(2)]; });
-    var W=1000,H=320,mL=16,mR=16,mT=16,mB=44,iw=W-mL-mR,ih=H-mT-mB,n=M.length;
-    if(!n){ return; }
-    var maxS=Math.max.apply(null,M.map(function(x){return x[1];}));
-    var maxC=Math.max.apply(null,M.map(function(x){return x[2];}));
-    var sMax=Math.max(1e5,Math.ceil(maxS/1e5)*1e5), cMax=Math.max(1e4,Math.ceil(maxC/1e4)*1e4);
-    var bw=iw/n, bar=bw*0.56;
-    function xc(i){return mL+bw*i+bw/2;} function yS(v){return mT+ih-(v/sMax)*ih;} function yC(v){return mT+ih-(v/cMax)*ih;}
-    var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="xMidYMid meet" font-family="var(--font-mono)">';
-    for(var g=0; g<=sMax/1e5; g++){ var v=g*1e5, y=yS(v); s+='<line x1="'+mL+'" y1="'+y+'" x2="'+(W-mR)+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/><text x="'+mL+'" y="'+(y-4)+'" fill="var(--fg-muted)" font-size="10">'+(v/1e5)+'</text>'; }
-    M.forEach(function(x,i){ var px=xc(i)-bar/2,y=yS(x[1]),h=mT+ih-y; s+='<rect x="'+px.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bar.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" fill="var(--accent)" opacity="0.88"><title>'+x[3]+' — '+smart(x[1])+'</title></rect>'; });
-    var pts=M.map(function(x,i){return xc(i).toFixed(1)+","+yC(x[2]).toFixed(1);}).join(" ");
-    s+='<polyline points="'+pts+'" fill="none" stroke="var(--accent-2)" stroke-width="2.4" stroke-linejoin="round"/>';
-    M.forEach(function(x,i){ s+='<circle cx="'+xc(i).toFixed(1)+'" cy="'+yC(x[2]).toFixed(1)+'" r="2.6" fill="var(--accent-2)"><title>'+x[3]+' — '+smart(x[2])+'</title></circle>'; });
-    M.forEach(function(x,i){ s+='<text x="'+xc(i).toFixed(1)+'" y="'+(H-mB+16)+'" fill="var(--fg-muted)" font-size="10" text-anchor="middle">'+x[3]+'</text>'; });
-    s+='<text x="'+mL+'" y="'+(H-8)+'" fill="var(--fg-muted)" font-size="10">₹ lakh (bars)</text></svg>';
-    document.getElementById("trendChart").innerHTML=s;
-  })();
-
-  (function(){
-    var mm={};
-    BILLS.forEach(function(b){ if(!mm[b.man])mm[b.man]={s:0,n:0,c:0}; mm[b.man].s+=b.amount; mm[b.man].n++; mm[b.man].c+=b.commission; });
-    var tb=document.querySelector("#manufTable tbody");
-    Object.keys(mm).sort(function(a,b){return mm[b].s-mm[a].s;}).forEach(function(id){
-      var p=byId[id], tr=document.createElement("tr");
-      tr.innerHTML='<td><span class="linkname" data-id="'+id+'">'+esc(p.name)+'</span></td><td class="n">'+smart(mm[id].s)+'</td><td class="n">'+mm[id].n+'</td><td class="n" style="color:var(--accent-2)">'+smart(mm[id].c)+'</td>';
-      tb.appendChild(tr);
-    });
-  })();
-
-  // ---------- party modal ----------
-  function openParty(id){
-    var p=byId[id], isCust=id.charAt(0)==="C";
-    var rows=BILLS.filter(function(b){ return isCust?b.cust===id:b.man===id; });
-    var tot=sum(rows,function(b){return b.amount;}), comm=sum(rows,function(b){return b.commission;}), pend=sum(rows,function(b){return b.pending;});
-    var root=document.getElementById("modalRoot");
-    var th= isCust
-      ? '<tr><th>Date</th><th>Bill #</th><th>Manufacturer</th><th class="n">Amount</th><th class="n">Pending</th><th>Status</th></tr>'
-      : '<tr><th>Date</th><th>Bill #</th><th>Customer</th><th class="n">Amount</th><th class="n">Commission</th><th>Status</th></tr>';
-    var body="";
-    rows.forEach(function(b){
-      var other=isCust?byId[b.man].name:byId[b.cust].name;
-      var statusBadge='<span class="badge '+(b.paid?"paid":"unpaid")+'">'+(b.paid?"paid":"unpaid")+'</span>';
-      body+= isCust
-        ? '<tr><td class="tnum">'+fmtDate(b.date)+'</td><td class="tnum">'+esc(b.no)+'</td><td>'+esc(other)+'</td><td class="n">'+smart(b.amount)+'</td><td class="n">'+(b.pending?smart(b.pending):"—")+'</td><td>'+statusBadge+'</td></tr>'
-        : '<tr><td class="tnum">'+fmtDate(b.date)+'</td><td class="tnum">'+esc(b.no)+'</td><td>'+esc(other)+'</td><td class="n">'+smart(b.amount)+'</td><td class="n" style="color:var(--accent-2)">'+smart(b.commission)+'</td><td>'+statusBadge+'</td></tr>';
-    });
-    var tiles = isCust
-      ? '<div class="mtile"><div class="l">Bills</div><div class="v">'+rows.length+'</div></div><div class="mtile"><div class="l">Total bought</div><div class="v">'+smart(tot)+'</div></div><div class="mtile pend"><div class="l">Pending</div><div class="v">'+smart(pend)+'</div></div>'
-      : '<div class="mtile"><div class="l">Bills</div><div class="v">'+rows.length+'</div></div><div class="mtile"><div class="l">Goods sold</div><div class="v">'+smart(tot)+'</div></div><div class="mtile paid"><div class="l">Commission</div><div class="v">'+smart(comm)+'</div></div>';
-    root.innerHTML='<div class="ovl" id="ovl"><div class="modal"><div class="mh"><div><span class="ptag '+(isCust?"buyer":"manuf")+'">'+(isCust?"Customer":"Manufacturer")+'</span><h3 style="margin-top:6px">'+esc(p.name)+'</h3><div class="msub">'+esc(p.city)+'</div></div><button class="xbtn" id="xbtn">✕</button></div><div class="mtiles">'+tiles+'</div><div class="chart-wrap"><table><thead>'+th+'</thead><tbody>'+body+'</tbody></table></div></div></div>';
-    document.getElementById("xbtn").addEventListener("click",closeModal);
-    document.getElementById("ovl").addEventListener("click",function(e){ if(e.target.id==="ovl") closeModal(); });
   }
-  function closeModal(){ document.getElementById("modalRoot").innerHTML=""; }
-  document.addEventListener("click",function(e){ var el=e.target.closest(".linkname"); if(el){ openParty(el.getAttribute("data-id")); } });
-  document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeModal(); });
 
-  // ---------- search ----------
+  function renderTrend(d){
+    var M=d.monthly, W=1000,H=330,mL=16,mR=16,mT=16,mB=46,iw=W-mL-mR,ih=H-mT-mB,n=M.length;
+    if(!n){ document.getElementById("trendChart").textContent="No data"; return; }
+    var maxG=Math.max.apply(null,M.map(function(m){return m[1];}));
+    var maxC=Math.max.apply(null,M.map(function(m){return m[3];}));
+    var gMax=Math.max(1e7,Math.ceil(maxG/1e7)*1e7), cMax=Math.max(5e5,Math.ceil(maxC/5e5)*5e5);
+    var bw=iw/n, bar=bw*0.56;
+    function xc(i){return mL+bw*i+bw/2;} function yG(v){return mT+ih-(v/gMax)*ih;} function yC(v){return mT+ih-(v/cMax)*ih;}
+    var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="xMidYMid meet" font-family="var(--font-mono)">';
+    for(var g=0; g<=gMax/1e7; g++){ var v=g*1e7, y=yG(v);
+      s+='<line x1="'+mL+'" y1="'+y+'" x2="'+(W-mR)+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/>';
+      s+='<text x="'+mL+'" y="'+(y-4)+'" fill="var(--fg-muted)" font-size="10">'+(v/1e7)+'</text>'; }
+    M.forEach(function(m,i){ var x=xc(i)-bar/2,y=yG(m[1]),h=mT+ih-y;
+      s+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bar.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" fill="var(--accent)" opacity="0.88"><title>'+m[4]+' — ₹'+cr(m[1])+' Cr, '+m[2]+' bills</title></rect>'; });
+    var pts=M.map(function(m,i){return xc(i).toFixed(1)+","+yC(m[3]).toFixed(1);}).join(" ");
+    s+='<polyline points="'+pts+'" fill="none" stroke="var(--accent-2)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>';
+    M.forEach(function(m,i){ s+='<circle cx="'+xc(i).toFixed(1)+'" cy="'+yC(m[3]).toFixed(1)+'" r="2.6" fill="var(--accent-2)"><title>'+m[4]+' — ₹'+lk(m[3])+' L commission</title></circle>'; });
+    M.forEach(function(m,i){ if(i%3===0||i===n-1) s+='<text x="'+xc(i).toFixed(1)+'" y="'+(H-mB+16)+'" fill="var(--fg-muted)" font-size="10" text-anchor="middle">'+m[4]+'</text>'; });
+    s+='<text x="'+mL+'" y="'+(H-8)+'" fill="var(--fg-muted)" font-size="10">₹ crore (bars)</text>';
+    s+='<text x="'+(W-mR)+'" y="'+(H-8)+'" fill="var(--fg-muted)" font-size="10" text-anchor="end">line peak ₹'+lk(maxC)+' L</text></svg>';
+    document.getElementById("trendChart").innerHTML=s;
+  }
+
+  function renderConcentration(d){
+    var total=d.kpis.goodsBilled, S=d.sman, maxV=S.length?S[0][2]:1;
+    var list=document.getElementById("smanList"); clear(list);
+    S.forEach(function(r){
+      var w=(100*r[2]/maxV).toFixed(1), col=r[3]?"var(--accent)":"var(--accent-2)";
+      var div=document.createElement("div"); div.className="row";
+      div.innerHTML='<div class="nm">'+esc(r[1])+(r[3]?' <span style="font-size:10.5px;font-family:var(--font-mono);padding:1px 6px;border-radius:5px;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent);font-weight:600">owner</span>':'')+'</div>'+
+        '<div class="track"><div class="fill" style="width:'+w+'%;background:'+col+'"></div></div>'+
+        '<div class="amt"><b>'+pct(r[2],total)+'%</b> · ₹'+cr(r[2])+'Cr</div>';
+      list.appendChild(div);
+    });
+    var owner=S.filter(function(r){return r[3];}).reduce(function(a,r){return a+r[2];},0), op=pct(owner,total);
+    document.getElementById("concCallout").innerHTML='<b>'+op+'% of all goods billed</b> is booked under the proprietor (Mahesh). '+
+      'The rest spreads across sub-agencies across India. That concentration is the single biggest key-person risk in the book.';
+    var r=58,cx=70,cy=70,circ=2*Math.PI*r,ownLen=circ*owner/total;
+    var s='<svg viewBox="0 0 140 140" width="150" height="150">';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="var(--accent-2)" stroke-width="18"/>';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="var(--accent)" stroke-width="18" stroke-dasharray="'+ownLen.toFixed(1)+' '+(circ-ownLen).toFixed(1)+'" stroke-dashoffset="'+(circ*0.25).toFixed(1)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';
+    s+='<text x="'+cx+'" y="'+(cy-4)+'" text-anchor="middle" font-family="var(--font-display)" font-weight="600" font-size="26" fill="var(--fg)">'+op+'%</text>';
+    s+='<text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" font-family="var(--font-sans)" font-size="10" fill="var(--fg-muted)">owner-booked</text></svg>';
+    document.getElementById("donut").innerHTML=s;
+  }
+
+  function renderSuppliers(d){
+    var tb=document.querySelector("#suppTable tbody"); clear(tb);
+    d.supp.forEach(function(r){
+      var tr=document.createElement("tr");
+      tr.innerHTML='<td>'+esc(r[0])+'</td><td class="n">₹'+cr(r[1])+' Cr</td><td class="n">'+grp(r[2])+'</td><td class="n">₹'+grp(r[1]/r[2])+'</td>';
+      tb.appendChild(tr);
+    });
+  }
+
+  function renderWeek(d){
+    var w=d.week;
+    document.getElementById("weekRange").textContent="Week of "+w.thisStart+" to "+w.thisEnd+" · Monday to today";
+    function arrow(cur,prev){
+      if(!(prev>0)) return "";
+      var dp=(cur-prev)/prev*100;
+      return dp>=0 ? ' <span style="color:var(--good)">▲'+Math.abs(dp).toFixed(0)+'%</span>'
+                   : ' <span style="color:var(--bad)">▼'+Math.abs(dp).toFixed(0)+'%</span>';
+    }
+    var cards=[
+      {label:"Sales made this week",color:"var(--accent)",val:smart(w.billedThis),foot:(w.billsThis!=null?grp(w.billsThis)+" bill"+(w.billsThis===1?"":"s")+" · ":"")+"vs "+smart(w.billedLast)+" last week"+arrow(w.billedThis,w.billedLast),href:"sales.html",more:"View weekly sales →"},
+      {label:"Commission billed this week",color:"var(--accent-2)",val:smart(w.commThis),foot:"vs "+smart(w.commLast)+" last week"+arrow(w.commThis,w.commLast),href:"commweekly.html",more:"View weekly commission →"},
+      {label:"Money received from sales this week",color:"var(--good)",val:smart(w.salesRecvThis),foot:"collected from buyers · vs "+smart(w.salesRecvLast)+" last week"+arrow(w.salesRecvThis,w.salesRecvLast)},
+      {label:"Commission received this week",color:"var(--good)",val:smart(w.commRecvThis),foot:"cash in · vs "+smart(w.commRecvLast)+" last week"+arrow(w.commRecvThis,w.commRecvLast)}
+    ];
+    var g=document.getElementById("weekStats"); clear(g);
+    cards.forEach(function(c){
+      var el=document.createElement(c.href?"a":"div"); el.className="kpi"; if(c.href) el.href=c.href;
+      el.innerHTML='<div class="label"><span class="dot" style="background:'+c.color+'"></span>'+c.label+'</div>'+
+        '<div class="val tnum" style="font-size:clamp(22px,3.6vw,28px)">'+c.val+'</div><div class="foot">'+c.foot+'</div>'+
+        (c.more?'<div class="more">'+c.more+'</div>':'');
+      g.appendChild(el);
+    });
+    var tb=document.querySelector("#worklistTable tbody"); clear(tb);
+    w.worklist.forEach(function(r,i){
+      var tr=document.createElement("tr");
+      tr.innerHTML='<td class="n" style="color:var(--fg-muted)">'+(i+1)+'</td>'+
+        '<td>'+(r[6]?'<a class="blink" href="buyer.html?cd='+encodeURIComponent(r[6])+'">'+esc(r[0])+'</a>':esc(r[0]))+'</td><td style="color:var(--fg-muted)">'+esc(r[1])+'</td>'+
+        '<td class="n"><b>'+smart(r[2])+'</b></td>'+
+        '<td class="n">'+r[3]+'d</td>'+
+        '<td style="color:var(--fg-muted)">'+esc(r[5]||"—")+'</td>'+
+        '<td class="tnum">'+esc(r[4]||"—")+'</td>';
+      tb.appendChild(tr);
+    });
+    var al=document.getElementById("agingAlarms"); clear(al);
+    var head=document.createElement("div"); head.style.cssText="font-size:13.5px;margin-bottom:12px";
+    head.innerHTML='<b>'+smart(w.cross90)+'</b> across <b>'+w.cross90n+' bills</b> crossed the 90-day line this week'+
+      (w.cross180n>0 ? ', of which <b>'+smart(w.cross180)+'</b> ('+w.cross180n+') pushed past 180 days' : '')+
+      '. Chase these before they harden into bad debt.';
+    al.appendChild(head);
+    if (w.newlyAged.length){
+      var tbl=document.createElement("table");
+      tbl.innerHTML='<thead><tr><th>Buyer</th><th class="n">Open amount</th><th class="n">Age</th><th>Crossed</th></tr></thead><tbody></tbody>';
+      var tbb=tbl.querySelector("tbody");
+      w.newlyAged.forEach(function(x){
+        var tr=document.createElement("tr");
+        tr.innerHTML='<td>'+esc(x[0])+'</td><td class="n">'+smart(x[1])+'</td><td class="n">'+x[2]+'d</td>'+
+          '<td><span style="color:'+(x[3]>=180?'var(--bad)':'var(--warn)')+';font-weight:600">'+x[3]+' days</span></td>';
+        tbb.appendChild(tr);
+      });
+      al.appendChild(tbl);
+    } else {
+      var none=document.createElement("div"); none.style.cssText="color:var(--fg-muted);font-size:13px";
+      none.textContent="No bills crossed a danger line this week."; al.appendChild(none);
+    }
+  }
+
+  function renderAll(d){ renderWeek(d); renderKpis(d); renderOutstanding(d); renderTrend(d); renderConcentration(d); renderSuppliers(d); }
+
+  function markerKey(m){ return m? [m.lastEntry,m.salesRows,m.ledgerRows,m.billwiseRows].join("|") : ""; }
+
+  function showBanner(cls,html){ var b=document.getElementById("banner"); b.className="banner "+cls;
+    var dotcol = cls==="new"?"var(--good)":cls==="err"?"var(--bad)":"var(--fg-muted)";
+    b.innerHTML='<span class="bdot" style="background:'+dotcol+'"></span><span>'+html+'</span>'; b.hidden=false; }
+
+  function toast(cls,html){
+    var wrap=document.getElementById("toasts");
+    var t=document.createElement("div"); t.className="toast "+cls;
+    t.innerHTML='<span class="tdot"></span><span>'+html+'</span>';
+    wrap.appendChild(t);
+    requestAnimationFrame(function(){ t.classList.add("show"); });
+    setTimeout(function(){ t.classList.remove("show"); setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); },260); }, 3600);
+  }
+
+  function setStatus(d){
+    document.getElementById("status").innerHTML=
+      'Last entry: <b>'+(d.marker.lastEntry||"—")+'</b><br>Checked: '+new Date().toLocaleTimeString();
+  }
+
+  function fetchData(isRefresh){
+    var btn=document.getElementById("refreshBtn"), txt=document.getElementById("btnTxt");
+    btn.disabled=true; txt.innerHTML='<span class="spin"></span> Reading…';
+    fetch("/api/data",{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+      if(!d.ok){ showBanner("err","Could not read the database: "+esc(d.error||"unknown error")); return; }
+      document.getElementById("banner").hidden=true;
+      var newKey=markerKey(d.marker), oldKey=markerKey(state.prevMarker);
+      renderAll(d); setStatus(d);
+      if(isRefresh){
+        if(state.prevMarker && newKey===oldKey){
+          toast("same","No new updates · last entry "+esc(d.marker.lastEntry));
+        } else if(state.prevMarker){
+          var nb=d.marker.salesRows-state.prevMarker.salesRows;
+          var nl=d.marker.ledgerRows-state.prevMarker.ledgerRows;
+          var np=d.marker.billwiseRows-state.prevMarker.billwiseRows;
+          var parts=[]; if(nb>0)parts.push("+"+nb+" sales"); if(nl>0)parts.push("+"+nl+" ledger"); if(np>0)parts.push("+"+np+" settlements");
+          toast("new","Updated · latest entry "+esc(d.marker.lastEntry)+(parts.length?" ("+parts.join(", ")+")":""));
+        } else {
+          toast("same","Refreshed · last entry "+esc(d.marker.lastEntry));
+        }
+      }
+      state.prevMarker=d.marker;
+    }).catch(function(e){
+      showBanner("err","Can't reach the data engine. The <b>demo</b> window must be open — launch it from the Dashboard folder, then reload this page. ("+esc(e.message)+")");
+    }).finally(function(){
+      btn.disabled=false; txt.textContent="Refresh data";
+      var ov=document.getElementById("loadOverlay"); if(ov) ov.hidden=true;
+    });
+  }
+
+  document.getElementById("refreshBtn").addEventListener("click",function(){ fetchData(true); });
+  fetchData(false);
+
+  // ---- buyer / mill search ----
   (function(){
-    var all=CUST.map(function(p){return {id:p.id,name:p.name,city:p.city,type:"buyer"};}).concat(MANUF.map(function(p){return {id:p.id,name:p.name,city:p.city,type:"manuf"};}));
-    var input=document.getElementById("searchInput"), box=document.getElementById("searchResults");
-    function hide(){ box.hidden=true; }
-    input.addEventListener("input",function(){
+    var parties=[], input=document.getElementById("searchInput"), box=document.getElementById("searchResults"), active=-1, shown=[];
+    fetch("/api/buyers",{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){ if(d.ok) parties=d.buyers; }).catch(function(){});
+    function pageFor(b){ return (b[3]==="mill"?"manufacturer.html?cd=":"buyer.html?cd=")+encodeURIComponent(b[0]); }
+    function go(b){ if(b) window.location.href=pageFor(b); }
+    function hide(){ box.hidden=true; active=-1; }
+    function draw(){
       var qv=input.value.trim().toLowerCase();
       if(!qv){ hide(); return; }
-      var shown=all.filter(function(p){ return p.name.toLowerCase().indexOf(qv)>=0; }).slice(0,12);
+      shown=parties.filter(function(b){ return b[1].toLowerCase().indexOf(qv)>=0; }).slice(0,15);
       box.innerHTML="";
-      if(!shown.length){ box.innerHTML='<div class="empty">No match for &ldquo;'+esc(input.value)+'&rdquo;</div>'; box.hidden=false; return; }
-      shown.forEach(function(p){
-        var a=document.createElement("div"); a.className="item";
-        a.innerHTML='<span class="nm"><span class="ptag '+(p.type==="manuf"?"manuf":"buyer")+'">'+(p.type==="manuf"?"Mfr":"Buyer")+'</span>'+esc(p.name)+'</span><span class="ct">'+esc(p.city)+'</span>';
-        a.addEventListener("click",function(){ hide(); input.value=""; openParty(p.id); });
+      if(!shown.length){ box.innerHTML='<div class="empty">No buyer or manufacturer matches &ldquo;'+esc(input.value)+'&rdquo;</div>'; box.hidden=false; return; }
+      shown.forEach(function(b,i){
+        var a=document.createElement("a"); a.className="item"; a.href=pageFor(b);
+        var tag=b[3]==="mill"?'<span class="ptag mill">Mfr</span>':'<span class="ptag buyer">Buyer</span>';
+        a.innerHTML='<span class="nm">'+tag+esc(b[1])+'</span><span class="ct">'+esc(b[2]||"")+'</span>';
+        a.addEventListener("click",function(e){ e.preventDefault(); go(b); });
         box.appendChild(a);
       });
-      box.hidden=false;
+      active=-1; box.hidden=false;
+    }
+    input.addEventListener("input",draw);
+    input.addEventListener("keydown",function(e){
+      if(box.hidden) return;
+      var items=box.querySelectorAll(".item");
+      if(e.key==="ArrowDown"){ e.preventDefault(); active=Math.min(active+1,items.length-1); }
+      else if(e.key==="ArrowUp"){ e.preventDefault(); active=Math.max(active-1,0); }
+      else if(e.key==="Enter"){ e.preventDefault(); if(shown.length){ go(shown[active>=0?active:0]); } return; }
+      else if(e.key==="Escape"){ hide(); return; } else { return; }
+      items.forEach(function(it,i){ it.classList.toggle("active",i===active); });
+      if(items[active]) items[active].scrollIntoView({block:"nearest"});
     });
     document.addEventListener("click",function(e){ if(!document.getElementById("search").contains(e.target)) hide(); });
   })();

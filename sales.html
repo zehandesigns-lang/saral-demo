@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Weekly sales</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" />
+<style>
+  :root{
+    --bg:#f6f4ef; --panel:#ffffff; --panel-2:#faf8f3; --panel-3:#f1eee7;
+    --fg:#1f2430; --fg-muted:#6f6a62; --border:#e6e1d8;
+    --accent:#2f4bd6; --accent-2:#148a7c; --good:#2e9e5b; --warn:#c08a1e; --bad:#c6482f;
+    --font-display:"Fraunces",Georgia,serif; --font-sans:"IBM Plex Sans",system-ui,sans-serif; --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22; --panel-3:#23272f; --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
+    --accent:#7389ff; --accent-2:#3dc6b4; --good:#49bd74; --warn:#e0b150; --bad:#e2654a; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#14161b; --panel:#1c1f26; --panel-2:#191c22; --panel-3:#23272f; --fg:#e9e6e0; --fg-muted:#9b968c; --border:#2b2f38;
+    --accent:#7389ff; --accent-2:#3dc6b4; --good:#49bd74; --warn:#e0b150; --bad:#e2654a; color-scheme:dark;
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding-block:28px;padding-left:20px;padding-right:20px}
+  .tnum{font-variant-numeric:tabular-nums} [hidden]{display:none!important}
+  a.back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;margin-bottom:14px}
+  a.back:hover{text-decoration:underline}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2);font-weight:600;margin-bottom:6px}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(26px,5vw,38px);margin:0;line-height:1.05}
+  .sub{color:var(--fg-muted);font-size:13.5px;margin-top:6px;border-bottom:1px solid var(--border);padding-bottom:18px}
+
+  .list{display:flex;flex-direction:column;gap:8px;margin-top:18px}
+  .wk{border:1px solid var(--border);border-radius:12px;background:var(--panel);overflow:hidden}
+  .wkhead{display:grid;grid-template-columns:18px 1fr auto;gap:12px;align-items:center;padding:14px 16px;cursor:pointer}
+  .wkhead:hover{background:var(--panel-2)}
+  .chev{color:var(--fg-muted);transition:transform .18s;font-size:12px}
+  .wk.open > .wkhead .chev{transform:rotate(90deg)}
+  .wklabel{font-weight:600;font-size:15px}
+  .wkmeta{font-size:12px;color:var(--fg-muted);margin-top:2px;font-family:var(--font-mono)}
+  .nowtag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 7px;border-radius:20px;background:color-mix(in srgb,var(--accent-2) 18%,transparent);color:var(--accent-2);vertical-align:2px;margin-left:8px}
+  .wktot{text-align:right;font-family:var(--font-mono)}
+  .wktot b{font-size:16px;font-weight:600} .wktot small{display:block;color:var(--accent-2);font-size:11.5px}
+  .wkbody{border-top:1px solid var(--border);padding:8px 12px 14px;background:var(--panel-2)}
+
+  .by{border:1px solid var(--border);border-radius:9px;background:var(--panel);margin-top:8px;overflow:hidden}
+  .byhead{display:grid;grid-template-columns:16px 1fr auto;gap:10px;align-items:center;padding:10px 12px;cursor:pointer}
+  .byhead:hover{background:var(--panel-2)}
+  .by.open > .byhead .chev{transform:rotate(90deg)}
+  .byname{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bysub{font-size:11px;color:var(--fg-muted);margin-top:1px}
+  .bytot{text-align:right;font-family:var(--font-mono);font-size:12.5px}
+  .bytot b{font-weight:600} .bytot small{display:block;color:var(--accent-2);font-size:10.5px}
+  .bybody{border-top:1px solid var(--border);padding:4px 12px 12px;background:var(--panel-3)}
+
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+  th{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--fg-muted);font-weight:600}
+  td.n,th.n{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  .rate{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-muted)}
+  .exp{color:var(--accent-2);font-weight:600}
+  a.blink{color:var(--accent);text-decoration:none;font-weight:600} a.blink:hover{text-decoration:underline}
+  a.viewbill{color:var(--accent);text-decoration:none;font-weight:600;font-size:11px;white-space:nowrap}
+  a.viewbill:hover{text-decoration:underline}
+  .total-row td{border-top:2px solid var(--border);font-weight:600}
+
+  #load{color:var(--fg-muted);font-family:var(--font-mono);font-size:13px;margin-top:30px}
+  #err{color:var(--bad);margin-top:20px}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.spin{animation:none}}
+  @media (max-width:520px){ .wkhead,.byhead{grid-template-columns:16px 1fr auto;gap:8px} .wklabel{font-size:13.5px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to dashboard</a>
+  <div class="eyebrow">Ronak Agency</div>
+  <h1>Weekly sales</h1>
+  <div class="sub">How much you sold each week and to whom &mdash; tap a week, then a buyer, to see every bill and the commission it should earn</div>
+
+  <div id="load"><span class="spin"></span>Reading sales&hellip;</div>
+  <div id="err" hidden></div>
+  <div class="list" id="list"></div>
+</div>
+
+  <script src="data.js"></script>
+<script>
+  var weekCache={};
+
+  function grp(n){ n=Math.round(n).toString(); var l3=n.slice(-3),r=n.slice(0,-3); if(r) l3=","+l3; return r.replace(/\B(?=(\d{2})+(?!\d))/g,",")+l3; }
+  function cr(n){ return (n/1e7).toFixed(2); }
+  function lk(n){ return (n/1e5).toFixed(2); }
+  function smart(n){ return n>=1e7 ? "₹"+cr(n)+" Cr" : n>=1e5 ? "₹"+lk(n)+" L" : "₹"+grp(n); }
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+
+  function renderWeeks(d){
+    document.getElementById("load").hidden=true;
+    var list=document.getElementById("list"); clear(list);
+    d.weeks.forEach(function(w){
+      var wk=document.createElement("div"); wk.className="wk";
+      var head=document.createElement("div"); head.className="wkhead";
+      var badge=w.current?' <span class="nowtag">This week</span>':'';
+      head.innerHTML='<div class="chev">▶</div>'+
+        '<div><div class="wklabel">'+esc(w.label)+badge+'</div><div class="wkmeta">'+w.bills+' bills · '+w.buyers+' buyers</div></div>'+
+        '<div class="wktot"><b>'+smart(w.total)+'</b><small>exp. comm '+smart(w.exp)+'</small></div>';
+      var body=document.createElement("div"); body.className="wkbody"; body.hidden=true;
+      head.addEventListener("click",function(){
+        var open=wk.classList.toggle("open"); body.hidden=!open;
+        if(open && !body.dataset.filled){ loadWeek(w.start, body); }
+      });
+      wk.appendChild(head); wk.appendChild(body); list.appendChild(wk);
+    });
+  }
+
+  function loadWeek(start, body){
+    body.dataset.filled="1";
+    body.innerHTML='<div style="color:var(--fg-muted);font-size:12.5px;padding:8px 2px"><span class="spin"></span>Loading buyers&hellip;</div>';
+    var done=function(d){
+      if(!d.ok){ body.innerHTML='<div style="color:var(--bad);font-size:12.5px;padding:8px 2px">'+esc(d.error||"failed")+'</div>'; return; }
+      clear(body);
+      if(!d.buyers.length){ body.innerHTML='<div style="color:var(--fg-muted);font-size:12.5px;padding:10px 2px">No sales entered for this week yet.</div>'; return; }
+      d.buyers.forEach(function(b){
+        var by=document.createElement("div"); by.className="by";
+        var bh=document.createElement("div"); bh.className="byhead";
+        bh.innerHTML='<div class="chev">▶</div>'+
+          '<div class="byname"><a class="blink" href="buyer.html?cd='+encodeURIComponent(b.code)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(b.name)+'</a><div class="bysub">'+(b.city?esc(b.city)+' · ':'')+b.bills+' bill'+(b.bills===1?'':'s')+'</div></div>'+
+          '<div class="bytot"><b>'+smart(b.total)+'</b><small>exp. comm '+smart(b.exp)+'</small></div>';
+        var bb=document.createElement("div"); bb.className="bybody"; bb.hidden=true;
+        bh.addEventListener("click",function(){
+          var open=by.classList.toggle("open"); bb.hidden=!open;
+          if(open && !bb.dataset.filled){ fillBills(bb,b); bb.dataset.filled="1"; }
+        });
+        by.appendChild(bh); by.appendChild(bb); body.appendChild(by);
+      });
+    };
+    if(weekCache[start]){ done(weekCache[start]); return; }
+    fetch("/api/sales-week?start="+start,{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){ weekCache[start]=d; done(d); })
+      .catch(function(e){ body.innerHTML='<div style="color:var(--bad);font-size:12.5px;padding:8px 2px">Could not load: '+esc(e.message)+'</div>'; });
+  }
+
+  function fillBills(el,b){
+    var t='<table><thead><tr><th>Date</th><th>Bill #</th><th>From manufacturer</th><th class="n">Amount</th><th class="n">Rate</th><th class="n">Exp. commission</th><th></th></tr></thead><tbody>';
+    b.items.forEach(function(it){
+      t+='<tr><td class="tnum">'+esc(it.date)+'</td><td class="tnum">'+esc(it.ref)+'</td><td>'+esc(it.supName)+'</td>'+
+         '<td class="n">'+smart(it.amount)+'</td><td class="n rate">'+it.rate+'%</td><td class="n exp">'+smart(it.exp)+'</td>'+
+         '<td class="n"><a class="viewbill" href="bill.html?vno='+it.vno+'" target="_blank" rel="noopener">View bill ↗</a></td></tr>';
+    });
+    t+='<tr class="total-row"><td colspan="3">Total</td><td class="n">'+smart(b.total)+'</td><td></td><td class="n exp">'+smart(b.exp)+'</td><td></td></tr>';
+    t+='</tbody></table>';
+    el.innerHTML=t;
+  }
+
+  fetch("/api/sales-weeks",{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+    if(!d.ok) throw new Error(d.error||"failed");
+    renderWeeks(d);
+  }).catch(function(e){
+    document.getElementById("load").hidden=true;
+    var er=document.getElementById("err"); er.hidden=false;
+    er.innerHTML="Can't load weekly sales. The <b>demo</b> window must be open. ("+esc(e.message)+")";
+  });
+</script>
+</body>
+</html>

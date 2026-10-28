@@ -1,34 +1,29 @@
 # Ronak Agency — Dashboard Demo
 
-A self-contained, static preview of the commission-agent dashboard, built to share via a link.
+A self-contained, static preview of the commission-agent dashboard — the full multi-page
+experience, running entirely in the browser with no server or database.
 
-**Live demo:** https://zehandesigns-lang.github.io/saral-demo/ *(after you enable GitHub Pages — see below)*
+**Live demo:** https://zehandesigns-lang.github.io/saral-demo/
 
-## What this is
+## What's inside
 
-A single `index.html` page — no server, no build step, no database. It renders a working
-commission-agent dashboard (this-week cards, outstanding & ageing, monthly sales/commission
-chart, top manufacturers, and a searchable customer/manufacturer drill-down).
+The real product's pages, served statically. A small `data.js` generates a sample dataset
+and answers all of the pages' `/api/…` calls in the browser, so every feature works:
 
-- **5 manufacturers** and **5 customers** are real business names from the agency's books.
-- **Every amount, bill and date is randomly generated sample data** — no real financial
-  information is included.
+- **Dashboard** (`index.html`) — "this week" cards with hyperlinks, big-picture KPIs,
+  **outstanding & ageing** with a **collection worklist** (oldest bill remaining, days overdue),
+  monthly chart, concentration, top manufacturers, and a searchable party box.
+- **Customer page** (`buyer.html`) — every bill, with period and paid/unpaid filters.
+- **Manufacturer page** (`manufacturer.html`) — commission bills, with the same filters.
+- **Weekly sales** (`sales.html`) and **Weekly commission** (`commweekly.html`) — week →
+  party → bill drill-downs, with a searchable manufacturer filter.
+- **Bill** (`bill.html`) and **Commission bill** (`commbill.html`) — printable invoice / note.
 
-The real product reads the agency's own Microsoft Access database directly and refreshes
-live; this demo bakes in fabricated figures so it can run anywhere as a plain web page.
+5 manufacturers and 5 customers use **real business names** from the agency's books, but
+**every amount, bill and date is randomly generated sample data** — no real financial
+information. The live product reads the agency's own database directly and refreshes live.
 
-## Publish it on GitHub Pages
+## Hosting
 
-1. Create a new **public** repository under your account (e.g. `saral-demo`).
-2. Push this folder to it:
-   ```bash
-   git remote add origin https://github.com/zehandesigns-lang/saral-demo.git
-   git branch -M main
-   git push -u origin main
-   ```
-3. On GitHub: **Settings → Pages → Build and deployment → Source: Deploy from a branch**,
-   pick **main** / **/ (root)**, Save.
-4. Wait ~1 minute. Your link will be:
-   **https://zehandesigns-lang.github.io/saral-demo/**
-
-Share that link with anyone — it opens in any browser, phone or desktop.
+Static files on GitHub Pages (branch `main`, root). No build step. To update, edit the
+files and `git push`; Pages redeploys automatically.
